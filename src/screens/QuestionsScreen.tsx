@@ -1,22 +1,42 @@
-import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
+import {Animated, StyleSheet, Text, View} from 'react-native';
+import React, {useRef, useState} from 'react';
 import Colors from '../utils/Colors';
 import Question from '../components/Question';
 import useStatusBar from '../hooks/useStatusBar';
+import {useGetLatestTenQuestionsQuery} from '../api/TriviaSlice';
+import {SwiperFlatList} from 'react-native-swiper-flatlist';
 
 const QuestionsScreen = () => {
   useStatusBar('dark-content', Colors.bkColor);
+  const {data, error, loading} = useGetLatestTenQuestionsQuery('');
+  const swiperRef = useRef<any>(null);
   return (
     <View style={styles.container}>
-      <Question
-        index={1}
-        count={10}
-        question={
-          'What is the only planet in our solar system that rotates clockwise?'
-        }
-        options={['option 1', 'option 2', 'option 3', 'option 4']}
-        handleNext={() => {}}
-      />
+      {!loading && !!data && (
+        <SwiperFlatList
+          data={data}
+          ref={swiperRef}
+          renderItem={({item, index}) => {
+            return (
+              <Question
+                key={index}
+                index={index + 1}
+                count={data.length}
+                question={item.question}
+                options={[...item.incorrect_answers, item.correct_answer]}
+                handleNext={() => {
+                  if (swiperRef.current && index < 9) {
+                    swiperRef.current.scrollToIndex({
+                      index: index + 1,
+                      animated: true,
+                    });
+                  }
+                }}
+              />
+            );
+          }}
+        />
+      )}
     </View>
   );
 };
@@ -28,5 +48,6 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: Colors.bkColor,
     justifyContent: 'center',
+    alignItems: 'center',
   },
 });

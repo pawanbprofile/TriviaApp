@@ -1,4 +1,11 @@
-import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Dimensions,
+  useWindowDimensions,
+} from 'react-native';
 import React from 'react';
 import Colors from '../utils/Colors';
 import Option from './Option';
@@ -19,8 +26,10 @@ const Question = ({
   options,
   handleNext,
 }: QuestionProps) => {
+  console.log('question ', question);
+  const width = useWindowDimensions().width;
   return (
-    <View style={styles.container}>
+    <View style={[styles.container, {width: width}]}>
       <View style={styles.indexContainer}>
         <Text style={styles.index}>{`Question # ${index}`}</Text>
       </View>
@@ -39,7 +48,15 @@ const Question = ({
 
         <View style={styles.nextContainer}>
           <TouchableOpacity style={styles.nextAction} onPress={handleNext}>
-            <Icon name={'long-arrow-right'} size={32} color={Colors.vanilla} />
+            {index < 9 ? (
+              <Icon
+                name={'long-arrow-right'}
+                size={32}
+                color={Colors.vanilla}
+              />
+            ) : (
+              <Text style={styles.submit}>Submit</Text>
+            )}
           </TouchableOpacity>
         </View>
       </View>
@@ -51,7 +68,6 @@ export default Question;
 
 const styles = StyleSheet.create({
   container: {
-    width: '100%',
     minHeight: '100%',
     justifyContent: 'flex-start',
     alignItems: 'center',
@@ -71,11 +87,13 @@ const styles = StyleSheet.create({
     fontFamily: 'Bebas Neue Regular',
   },
   question: {
+    width: '100%',
     fontSize: 20,
     fontFamily: 'Bebas Neue Regular',
     textAlign: 'justify',
-    textAlignVertical: 'top',
-    marginVertical: 12,
+    textAlignVertical: 'center',
+    height: 100,
+    color: Colors.primaryText,
   },
   optionsContainer: {
     flex: 1,
@@ -112,5 +130,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 32,
     justifyContent: 'center',
     alignItems: 'center',
+  },
+  submit: {
+    fontSize: 20,
+    color: Colors.vanilla,
+    fontWeight: '600',
+    fontFamily: 'Bebas Neue Regular',
   },
 });
