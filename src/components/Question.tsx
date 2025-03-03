@@ -26,7 +26,6 @@ const Question = ({
   options,
   handleNext,
 }: QuestionProps) => {
-  console.log('question ', question);
   const width = useWindowDimensions().width;
   return (
     <View style={[styles.container, {width: width}]}>
@@ -38,6 +37,7 @@ const Question = ({
         {!!options &&
           options.map((item, position) => (
             <Option
+              key={position}
               title={item}
               index={position}
               handlePress={(index: number) => {

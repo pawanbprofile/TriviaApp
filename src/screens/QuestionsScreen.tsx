@@ -1,18 +1,25 @@
-import {Animated, StyleSheet, Text, View} from 'react-native';
-import React, {useRef, useState} from 'react';
+import {StyleSheet, View} from 'react-native';
+import React, {useRef} from 'react';
 import Colors from '../utils/Colors';
 import Question from '../components/Question';
 import useStatusBar from '../hooks/useStatusBar';
 import {useGetLatestTenQuestionsQuery} from '../api/TriviaSlice';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
-
+import ErrorStatus from '../components/ErrorStatus';
+import LoaderStatus from '../components/LoaderStatus';
 const QuestionsScreen = () => {
   useStatusBar('dark-content', Colors.bkColor);
-  const {data, error, loading} = useGetLatestTenQuestionsQuery('');
+  const {data, isError, isLoading} = useGetLatestTenQuestionsQuery('');
   const swiperRef = useRef<any>(null);
+  if (isError) {
+    return <ErrorStatus />;
+  }
+  if (isLoading) {
+    return <LoaderStatus />;
+  }
   return (
     <View style={styles.container}>
-      {!loading && !!data && (
+      {!isLoading && !!data && (
         <SwiperFlatList
           data={data}
           ref={swiperRef}
