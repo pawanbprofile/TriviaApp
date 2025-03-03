@@ -6,15 +6,22 @@ import Colors from '../utils/Colors';
 type OptionProps = {
   title: string;
   index: number;
+  isCorrectAnswer: boolean;
   handlePress: (index: number) => void;
 };
-const Option = ({title, index, handlePress}: OptionProps) => {
+const Option = ({title, index, handlePress, isCorrectAnswer}: OptionProps) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
   return (
     <TouchableOpacity
       style={[
         styles.container,
-        {backgroundColor: isChecked ? Colors.easyColor : Colors.bkColor},
+        {
+          backgroundColor: isChecked
+            ? isCorrectAnswer
+              ? Colors.easyColor
+              : Colors.negative
+            : Colors.bkColor,
+        },
       ]}
       onPress={() => {
         setIsChecked(prevstate => !prevstate);

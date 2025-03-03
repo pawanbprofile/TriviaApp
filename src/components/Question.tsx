@@ -6,16 +6,18 @@ import {
   Dimensions,
   useWindowDimensions,
 } from 'react-native';
-import React from 'react';
+import React, {useEffect, useLayoutEffect, useRef} from 'react';
 import Colors from '../utils/Colors';
 import Option from './Option';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import {randomizeOptions} from '../utils/helperFunctions';
 
 type QuestionProps = {
   index: number;
   count: number;
   question: string;
   options: string[];
+  correct_answer: string;
   handleNext: () => void;
 };
 
@@ -24,9 +26,11 @@ const Question = ({
   index,
   question,
   options,
+  correct_answer,
   handleNext,
 }: QuestionProps) => {
   const width = useWindowDimensions().width;
+
   return (
     <View style={[styles.container, {width: width}]}>
       <View style={styles.indexContainer}>
@@ -39,6 +43,10 @@ const Question = ({
             <Option
               key={position}
               title={item}
+              isCorrectAnswer={
+                correct_answer?.toLocaleLowerCase() ===
+                item?.toLocaleLowerCase()
+              }
               index={position}
               handlePress={(index: number) => {
                 console.log(`option ${index} selected`);

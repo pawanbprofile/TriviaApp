@@ -1,4 +1,5 @@
 import {createApi, fetchBaseQuery} from '@reduxjs/toolkit/query/react';
+import {randomizeOptions} from '../utils/helperFunctions';
 
 export const TriviaSlice = createApi({
   reducerPath: 'Trivia',
@@ -11,7 +12,22 @@ export const TriviaSlice = createApi({
           method: 'GET',
         };
       },
-      transformResponse: response => response.results,
+      transformResponse: response => {
+        const transformedResponse = response.results.map(item => {
+          return {
+            type: item.type,
+            difficulty: item.difficulty,
+            category: item.category,
+            question: item.question,
+            correct_answer: item.correct_answer,
+            answers: randomizeOptions([
+              ...item.incorrect_answers,
+              item.correct_answer,
+            ]),
+          };
+        });
+        return transformedResponse;
+      },
     }),
   }),
 });

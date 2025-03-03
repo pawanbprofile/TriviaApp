@@ -7,6 +7,7 @@ import {useGetLatestTenQuestionsQuery} from '../api/TriviaSlice';
 import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import ErrorStatus from '../components/ErrorStatus';
 import LoaderStatus from '../components/LoaderStatus';
+import {randomizeOptions} from '../utils/helperFunctions';
 const QuestionsScreen = () => {
   useStatusBar('dark-content', Colors.bkColor);
   const {data, isError, isLoading} = useGetLatestTenQuestionsQuery('');
@@ -30,7 +31,8 @@ const QuestionsScreen = () => {
                 index={index + 1}
                 count={data.length}
                 question={item.question}
-                options={[...item.incorrect_answers, item.correct_answer]}
+                correct_answer={item.correct_answer}
+                options={item.answers}
                 handleNext={() => {
                   if (swiperRef.current && index < 9) {
                     swiperRef.current.scrollToIndex({
