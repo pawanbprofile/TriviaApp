@@ -9,6 +9,10 @@ type AppStackParams = {
 };
 
 const AppStack = createNativeStackNavigator<AppStackParams>();
+
+type AuthStackParams = {
+  Login: undefined;
+};
 const RootNavigator = () => {
   return (
     <NavigationContainer>
