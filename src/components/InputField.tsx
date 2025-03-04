@@ -33,6 +33,7 @@ const InputField = ({
         onChangeText={onChangeText}
         style={styles.input}
         placeholder={placeHolder}
+        placeholderTextColor={Colors.easyColor30}
         autoCorrect={false}
         underlineColorAndroid={'transparent'}
         secureTextEntry={isPassword && hidePassword}
@@ -59,6 +60,7 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     borderRadius: 8,
     borderWidth: 1,
+    borderColor: Colors.easyColor,
     marginTop: 18,
     flexDirection: 'row',
     alignItems: 'center',

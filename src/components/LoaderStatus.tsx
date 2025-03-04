@@ -3,10 +3,16 @@ import React from 'react';
 import Colors from '../utils/Colors';
 import {Flow} from 'react-native-animated-spinkit';
 
-const LoaderStatus = () => {
+type LoaderStatusProps = {
+  size: number;
+  width?: number;
+  height?: number;
+  color?: string;
+};
+const LoaderStatus = ({width, height, size, color}: LoaderStatusProps) => {
   return (
-    <View style={styles.container}>
-      <Flow size={72} color={Colors.positive} />
+    <View style={[styles.container, {width, height}]}>
+      <Flow size={size ? size : 72} color={color ? color : Colors.positive} />
     </View>
   );
 };

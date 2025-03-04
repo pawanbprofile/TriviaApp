@@ -22,3 +22,8 @@ export const fields = {
 export const actions = {
   login: 'Login',
 };
+
+export const validations = {
+  MIN_NAME_LEN: 5,
+  MIN_PASSWORD_LEN: 6,
+};

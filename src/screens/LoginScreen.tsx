@@ -3,26 +3,50 @@ import {
   KeyboardAvoidingView,
   Platform,
   StyleSheet,
+  Text,
   View,
 } from 'react-native';
 import React, {useMemo, useState} from 'react';
 import Colors from '../utils/Colors';
 import useStatusBar from '../hooks/useStatusBar';
-import {actions, fields, fonts} from '../types/Constants';
+import {actions, fields, fonts, validations} from '../types/Constants';
 import InputField from '../components/InputField';
 import ButtonWithText from '../components/ButtonWithText';
+import {useLoginMutation} from '../api/AuthSlice';
+import LoaderStatus from '../components/LoaderStatus';
+import {useNavigation} from '@react-navigation/native';
 
 const LoginScreen = () => {
   useStatusBar('dark-content', Colors.bkColor);
-  const handleLogin = () => {};
+  const navigation = useNavigation();
+  const [triggerLogin, {isError, error, isLoading}] = useLoginMutation();
   const [userName, setUserName] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
   const enableLogin = useMemo(() => {
     if (!!userName && !!password) {
-      return password?.length > 5 && userName?.length > 6;
+      return (
+        password?.length > validations.MIN_PASSWORD_LEN &&
+        userName?.length > validations?.MIN_NAME_LEN
+      );
     }
     return false;
   }, [password, userName]);
+
+  const handleLogin = () => {
+    if (!!userName && !!password) {
+      triggerLogin({
+        username: userName,
+        password: password,
+        expiresInMins: 10,
+      }).then(response => {
+        const {accessToken, refreshToken} = response?.data;
+        if (!!accessToken && !!refreshToken) {
+          navigation.navigate('Home');
+        }
+      });
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
@@ -45,11 +69,17 @@ const LoginScreen = () => {
             setPassword(input);
           }}
         />
+        {isError && error && (
+          <Text style={styles.error}>{error?.data?.message}</Text>
+        )}
         <ButtonWithText
           title={actions.login}
           onPress={handleLogin}
-          enabled={enableLogin}
-        />
+          enabled={enableLogin}>
+          {isLoading && enableLogin && (
+            <LoaderStatus size={32} color={Colors.vanilla} />
+          )}
+        </ButtonWithText>
       </View>
     </KeyboardAvoidingView>
   );
@@ -73,5 +103,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.lato,
     color: Colors.easyColor,
     fontWeight: 'bold',
+  },
+  error: {
+    fontSize: 12,
+    color: Colors.negative,
+    fontWeight: '600',
+    textAlign: 'left',
+    textAlignVertical: 'center',
+    marginTop: 12,
+    width: '90%',
   },
 });

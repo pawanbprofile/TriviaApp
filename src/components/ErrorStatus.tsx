@@ -3,10 +3,14 @@ import React from 'react';
 import Colors from '../utils/Colors';
 import {Flow} from 'react-native-animated-spinkit';
 
-const ErrorStatus = () => {
+type ErrorStatusProps = {
+  message?: string;
+};
+const ErrorStatus = ({message}: ErrorStatusProps) => {
+  const defaultMessage = 'Something went wrong';
   return (
     <View style={styles.container}>
-      <Text style={styles.error}>Something went wrong</Text>
+      <Text style={styles.error}>{message ? message : defaultMessage}</Text>
       <Flow size={32} color={Colors.negative} />
     </View>
   );

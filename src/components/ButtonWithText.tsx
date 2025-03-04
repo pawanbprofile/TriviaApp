@@ -1,5 +1,5 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React from 'react';
+import React, {Children, ReactNode} from 'react';
 import Colors from '../utils/Colors';
 import {fonts} from '../types/Constants';
 
@@ -7,11 +7,13 @@ type ButtonWithTextProps = {
   title: string;
   onPress: () => void;
   enabled?: boolean;
+  children?: ReactNode;
 };
 const ButtonWithText = ({
   title,
   onPress,
   enabled = false,
+  children,
 }: ButtonWithTextProps) => {
   return (
     <TouchableOpacity
@@ -21,13 +23,17 @@ const ButtonWithText = ({
         {backgroundColor: enabled ? Colors.easyColor : Colors.brown30},
       ]}
       onPress={onPress}>
-      <Text
-        style={[
-          styles.title,
-          {color: enabled ? Colors.vanilla : Colors.vanilla},
-        ]}>
-        {title}
-      </Text>
+      {children ? (
+        children
+      ) : (
+        <Text
+          style={[
+            styles.title,
+            {color: enabled ? Colors.vanilla : Colors.vanilla},
+          ]}>
+          {title}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 };
