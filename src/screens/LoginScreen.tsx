@@ -6,7 +6,7 @@ import {
   Text,
   View,
 } from 'react-native';
-import React, {useMemo, useState} from 'react';
+import React, {useContext, useMemo, useState} from 'react';
 import Colors from '../utils/Colors';
 import useStatusBar from '../hooks/useStatusBar';
 import {actions, fields, fonts, validations} from '../types/Constants';
@@ -14,11 +14,12 @@ import InputField from '../components/InputField';
 import ButtonWithText from '../components/ButtonWithText';
 import {useLoginMutation} from '../api/AuthSlice';
 import LoaderStatus from '../components/LoaderStatus';
-import {useNavigation} from '@react-navigation/native';
+import {AuthContext} from '../services/AuthContext';
+import { saveTokens } from '../services/KeyChainStorage';
 
-const LoginScreen = () => {
+const LoginScreen = ({navigation}) => {
   useStatusBar('dark-content', Colors.bkColor);
-  const navigation = useNavigation();
+  const {isLoggedIn, updateLoginStatus} = useContext(AuthContext);
   const [triggerLogin, {isError, error, isLoading}] = useLoginMutation();
   const [userName, setUserName] = useState<string | null>(null);
   const [password, setPassword] = useState<string | null>(null);
@@ -41,7 +42,8 @@ const LoginScreen = () => {
       }).then(response => {
         const {accessToken, refreshToken} = response?.data;
         if (!!accessToken && !!refreshToken) {
-          navigation.navigate('Home');
+          saveTokens(accessToken, refreshToken);
+          updateLoginStatus(true);
         }
       });
     }

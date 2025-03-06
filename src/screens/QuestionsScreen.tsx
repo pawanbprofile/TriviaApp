@@ -8,8 +8,10 @@ import {SwiperFlatList} from 'react-native-swiper-flatlist';
 import ErrorStatus from '../components/ErrorStatus';
 import LoaderStatus from '../components/LoaderStatus';
 import {randomizeOptions} from '../utils/helperFunctions';
+import {useRoute} from '@react-navigation/native';
 const QuestionsScreen = () => {
   useStatusBar('dark-content', Colors.bkColor);
+  const {params} = useRoute();
   const {data, isError, isLoading} = useGetLatestTenQuestionsQuery('');
   const swiperRef = useRef<any>(null);
   if (isError) {
@@ -18,6 +20,7 @@ const QuestionsScreen = () => {
   if (isLoading) {
     return <LoaderStatus />;
   }
+  console.log('params ', params);
   return (
     <View style={styles.container}>
       {!isLoading && !!data && (

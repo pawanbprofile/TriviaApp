@@ -1,16 +1,20 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useEffect} from 'react';
+import React, {useContext, useEffect} from 'react';
 import useStatusBar from '../hooks/useStatusBar';
 import Colors from '../utils/Colors';
 import Difficulty from '../components/Difficulty';
 import {LEVEL} from '../types/Constants';
 import {getLevels} from '../utils/helperFunctions';
 import labels from '../types/labels';
+import {useLogoutMutation} from '../api/AuthSlice';
+import {AuthContext} from '../services/AuthContext';
+import {useNavigation} from '@react-navigation/native';
 const levels = getLevels();
 const HomeScreen = () => {
+  const navigation = useNavigation();
   useStatusBar('dark-content', Colors.bkColor);
   const handleLevelSelection = (level: LEVEL) => {
-    console.log(level);
+    navigation.replace('Questions', {level: level});
   };
   return (
     <View style={styles.container}>

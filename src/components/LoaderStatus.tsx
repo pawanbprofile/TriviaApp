@@ -4,7 +4,7 @@ import Colors from '../utils/Colors';
 import {Flow} from 'react-native-animated-spinkit';
 
 type LoaderStatusProps = {
-  size: number;
+  size?: number;
   width?: number;
   height?: number;
   color?: string;
