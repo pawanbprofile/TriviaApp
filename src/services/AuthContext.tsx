@@ -15,9 +15,7 @@ export const AuthContextProvider = ({children}) => {
   const checkIsLoggedIn = async () => {
     const accessToken = await getAccessToken();
     const refreshToken = await getRefreshToken();
-    if (!!accessToken && !!refreshToken) {
-      setIsLoggedIn(true);
-    }
+    setIsLoggedIn(!!accessToken && !!refreshToken);
   };
   useEffect(() => {
     checkIsLoggedIn();

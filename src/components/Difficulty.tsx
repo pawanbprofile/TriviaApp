@@ -4,12 +4,13 @@ import Colors from '../utils/Colors';
 import {LEVEL} from '../types/Constants';
 
 type DifficultyProps = {
+  testID: string;
   title: string;
   onPress: (id: LEVEL) => void;
   level: LEVEL;
 };
 
-const Difficulty = ({title, level, onPress}: DifficultyProps) => {
+const Difficulty = ({title, level, onPress, testID}: DifficultyProps) => {
   const backgroundColor = useMemo(() => {
     switch (level) {
       case LEVEL.EASY: {
@@ -28,6 +29,7 @@ const Difficulty = ({title, level, onPress}: DifficultyProps) => {
   }, [level]);
   return (
     <TouchableOpacity
+      testID={testID}
       style={[styles.container, {backgroundColor: backgroundColor}]}
       onPress={() => onPress(level)}>
       <Text style={styles.title}>{title}</Text>

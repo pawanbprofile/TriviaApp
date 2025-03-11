@@ -1,40 +1,56 @@
 import {StyleSheet, Text, TouchableOpacity, View} from 'react-native';
-import React, {useState} from 'react';
+import React, {useContext, useState} from 'react';
 import Colors from '../utils/Colors';
 import Icon from 'react-native-vector-icons/Entypo';
+import {ScoreContext} from '../services/ScoreContext';
 type OptionProps = {
   title: string;
   index: number;
   isCorrectAnswer: boolean;
+  highlighCorrectOption: boolean;
   handlePress: (index: number) => void;
 };
-const Option = ({title, index, handlePress, isCorrectAnswer}: OptionProps) => {
+const Option = ({
+  title,
+  index,
+  handlePress,
+  isCorrectAnswer,
+  highlighCorrectOption,
+}: OptionProps) => {
   const [isChecked, setIsChecked] = useState<boolean>(false);
+  const {updateScore} = useContext(ScoreContext);
   return (
     <TouchableOpacity
       style={[
         styles.container,
         {
-          backgroundColor: isChecked
-            ? isCorrectAnswer
-              ? Colors.easyColor
-              : Colors.negative
-            : Colors.bkColor,
+          backgroundColor:
+            isChecked || (highlighCorrectOption && isCorrectAnswer)
+              ? isCorrectAnswer
+                ? Colors.easyColor
+                : Colors.negative
+              : Colors.bkColor,
         },
       ]}
       onPress={() => {
         setIsChecked(prevstate => !prevstate);
         handlePress(index);
+        isCorrectAnswer ? updateScore() : null;
       }}>
       <Text
         numberOfLines={2}
         style={[
           styles.title,
-          {color: isChecked ? Colors.vanilla : Colors.primaryText},
+          {
+            color:
+              isChecked || (highlighCorrectOption && isCorrectAnswer)
+                ? Colors.vanilla
+                : Colors.primaryText,
+          },
         ]}>
         {title}
       </Text>
-      {isChecked && (
+      {((highlighCorrectOption && isCorrectAnswer) || isChecked) && (
         <View style={styles.iconContainer}>
           <Icon
             name={isCorrectAnswer ? 'check' : 'cross'}

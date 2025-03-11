@@ -22,6 +22,7 @@ const HomeScreen = () => {
       {!!levels &&
         levels.map(item => (
           <Difficulty
+            testID={item.value}
             key={item.key}
             title={item.value}
             level={item.key}

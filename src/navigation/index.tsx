@@ -45,7 +45,7 @@ const RootStack = createNativeStackNavigator<RootStackParamsList>();
 
 const RootNavigator = () => {
   const {isLoggedIn} = useContext(AuthContext);
-
+  console.log('isLoggedIn ', isLoggedIn);
   if (isLoggedIn === null || isLoggedIn === undefined) {
     return (
       <View style={styles.container}>

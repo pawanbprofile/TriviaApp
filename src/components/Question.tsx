@@ -6,11 +6,22 @@ import {
   Dimensions,
   useWindowDimensions,
 } from 'react-native';
-import React, {useEffect, useLayoutEffect, useRef} from 'react';
+import React, {
+  useContext,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+  useState,
+} from 'react';
 import Colors from '../utils/Colors';
 import Option from './Option';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {randomizeOptions} from '../utils/helperFunctions';
+import * as ProgressBar from 'react-native-progress';
+import {LEVEL} from '../types/Constants';
+import * as he from 'he';
+import {ScoreContext} from '../services/ScoreContext';
 
 type QuestionProps = {
   index: number;
@@ -18,6 +29,7 @@ type QuestionProps = {
   question: string;
   options: string[];
   correct_answer: string;
+  level?: LEVEL;
   handleNext: () => void;
 };
 
@@ -27,36 +39,78 @@ const Question = ({
   question,
   options,
   correct_answer,
+  level,
   handleNext,
 }: QuestionProps) => {
   const width = useWindowDimensions().width;
-
+  const [highlightCorrectOption, setHighlightCorrectOption] =
+    useState<boolean>(false);
+  const {score} = useContext(ScoreContext);
+  const levelColor = useMemo(() => {
+    switch (level) {
+      case LEVEL.EASY: {
+        return Colors.easyColor;
+      }
+      case LEVEL.MEDIUM: {
+        return Colors.mediumColor;
+      }
+      case LEVEL.HARD: {
+        return Colors.hardColor;
+      }
+      default: {
+        return Colors.easyColor;
+      }
+    }
+  }, [level]);
   return (
     <View style={[styles.container, {width: width}]}>
       <View style={styles.indexContainer}>
         <Text style={styles.index}>{`Question # ${index}`}</Text>
+        <Text style={styles.score}>{`Score : ${score}`}</Text>
       </View>
-      <Text style={styles.question}>{question}</Text>
+      <ProgressBar.Bar
+        progress={index / count}
+        width={width - 40}
+        borderWidth={0}
+        color={levelColor}
+        unfilledColor={Colors.brown30}
+        animated={true}
+        animationType={'spring'}
+      />
+      <Text style={styles.question}>{he.decode(question)}</Text>
       <View style={styles.optionsContainer}>
         {!!options &&
           options.map((item, position) => (
             <Option
               key={position}
               title={item}
+              score={score}
               isCorrectAnswer={
                 correct_answer?.toLocaleLowerCase() ===
                 item?.toLocaleLowerCase()
               }
+              highlighCorrectOption={highlightCorrectOption}
               index={position}
               handlePress={(index: number) => {
                 console.log(`option ${index} selected`);
+                setHighlightCorrectOption(true);
               }}
             />
           ))}
 
         <View style={styles.nextContainer}>
-          <TouchableOpacity style={styles.nextAction} onPress={handleNext}>
-            {index < 9 ? (
+          <TouchableOpacity
+            disabled={!highlightCorrectOption}
+            style={[
+              styles.nextAction,
+              {
+                backgroundColor: highlightCorrectOption
+                  ? levelColor
+                  : Colors.brown30,
+              },
+            ]}
+            onPress={handleNext}>
+            {index <= 9 ? (
               <Icon
                 name={'long-arrow-right'}
                 size={32}
@@ -85,14 +139,25 @@ const styles = StyleSheet.create({
   indexContainer: {
     width: '100%',
     paddingVertical: 12,
-    justifyContent: 'center',
-    alignItems: 'flex-start',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    flexDirection: 'row',
   },
   index: {
     fontSize: 28,
     fontWeight: '600',
     color: Colors.primaryText,
     fontFamily: 'Bebas Neue Regular',
+  },
+  score: {
+    fontSize: 20,
+    fontWeight: '600',
+    color: Colors.primaryText,
+    fontFamily: 'Bebas Neue Regular',
+    textAlign: 'right',
+    textAlignVertical: 'center',
+    height: 100,
+    flex: 1,
   },
   question: {
     width: '100%',

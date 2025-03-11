@@ -15,7 +15,7 @@ import ButtonWithText from '../components/ButtonWithText';
 import {useLoginMutation} from '../api/AuthSlice';
 import LoaderStatus from '../components/LoaderStatus';
 import {AuthContext} from '../services/AuthContext';
-import { saveTokens } from '../services/KeyChainStorage';
+import {saveTokens} from '../services/KeyChainStorage';
 
 const LoginScreen = ({navigation}) => {
   useStatusBar('dark-content', Colors.bkColor);
@@ -53,17 +53,19 @@ const LoginScreen = ({navigation}) => {
     <KeyboardAvoidingView
       behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
       style={[styles.container]}>
-      <View style={[styles.inner]}>
+      <View testID={'login-screen'} style={[styles.inner]}>
         <Image
           source={require('../../assets/images/TriviaLogo.png')}
           style={styles.logo}
         />
         <InputField
+          testID={'name-field'}
           placeHolder={fields.enter_name}
           value={userName}
           onChangeText={input => setUserName(input)}
         />
         <InputField
+          testID={'password-field'}
           placeHolder={fields.enter_password}
           value={password}
           isPassword={true}
@@ -75,6 +77,7 @@ const LoginScreen = ({navigation}) => {
           <Text style={styles.error}>{error?.data?.message}</Text>
         )}
         <ButtonWithText
+          testID={'login-button'}
           title={actions.login}
           onPress={handleLogin}
           enabled={enableLogin}>

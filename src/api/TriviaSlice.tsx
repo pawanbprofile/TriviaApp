@@ -7,9 +7,15 @@ export const TriviaSlice = createApi({
   baseQuery: fetchBaseQuery({baseUrl: 'https://opentdb.com/api.php'}),
   endpoints: builder => ({
     getLatestTenQuestions: builder.query({
-      query: () => {
+      query: (difficulty?: string | null) => {
+        console.log('difficulty ', difficulty);
+        let defaultUrl = '?amount=10';
+        if (difficulty) {
+          defaultUrl += `&difficulty=${difficulty}`;
+        }
+        console.log('defaultUrl ', defaultUrl);
         return {
-          url: '?amount=10',
+          url: defaultUrl,
           method: 'GET',
         };
       },

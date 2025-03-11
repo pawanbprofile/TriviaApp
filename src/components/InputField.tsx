@@ -11,12 +11,14 @@ import Colors from '../utils/Colors';
 import Icon from 'react-native-vector-icons/Ionicons';
 
 type InputFieldProps = {
+  testID: string;
   placeHolder: string;
   isPassword?: boolean;
   value: string | null;
   onChangeText: (input: string) => void;
 };
 const InputField = ({
+  testID,
   placeHolder,
   isPassword = false,
   value,
@@ -29,6 +31,7 @@ const InputField = ({
   return (
     <View style={styles.container}>
       <TextInput
+        testID={testID}
         value={value ? value : ''}
         onChangeText={onChangeText}
         style={styles.input}

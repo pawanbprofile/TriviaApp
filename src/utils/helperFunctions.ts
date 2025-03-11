@@ -10,7 +10,6 @@ export const getLevels = () => {
 export const randomizeOptions = (options: string[]) => {
   for (let i = options.length - 1; i > 0; i--) {
     let j = Math.floor(Math.random() * (i + 1));
-    console.log(i, j);
     [options[i], options[j]] = [options[j], options[i]];
   }
   return options;

@@ -4,12 +4,14 @@ import Colors from '../utils/Colors';
 import {fonts} from '../types/Constants';
 
 type ButtonWithTextProps = {
+  testID: string;
   title: string;
   onPress: () => void;
   enabled?: boolean;
   children?: ReactNode;
 };
 const ButtonWithText = ({
+  testID,
   title,
   onPress,
   enabled = false,
@@ -17,6 +19,7 @@ const ButtonWithText = ({
 }: ButtonWithTextProps) => {
   return (
     <TouchableOpacity
+      testID={testID}
       disabled={!enabled}
       style={[
         styles.container,
